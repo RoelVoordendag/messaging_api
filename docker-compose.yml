@@ -1,0 +1,17 @@
+volumes:
+  postgres_db:
+    driver: local
+
+services:
+  postgres:
+    image: postgres:16.1
+    container_name: "messaging_api_db"
+    restart: always
+    environment:
+      POSTGRES_DB: "messaging_api"
+      POSTGRES_USER: "messaging_api"
+      POSTGRES_PASSWORD: "messaging_api"
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
