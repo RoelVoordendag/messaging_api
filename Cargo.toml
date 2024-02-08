@@ -1,11 +1,22 @@
+[workspace]
+#members = [".", "entity", "migration"]
+members = [".", "migration"]
+
 [package]
 name = "messaging_api"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+#entity = { path = "entity" }
+migration = { path = "migration" }
 actix-web = "4"
 cargo-watch = "8.5.2"
 log = "0.4.20"
+sea-orm = { version = "0.12", features = [
+    "sqlx-postgres",
+    "runtime-tokio-native-tls",
+    "macros",
+    "with-time"
+]}
+sea-orm-migration = "0.12.14"

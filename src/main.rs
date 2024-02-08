@@ -1,5 +1,7 @@
 use actix_web::{post, web, App, HttpResponse, HttpServer, Responder};
 
+use sea_orm::{ Database, DatabaseConnection };
+
 mod routes;
 
 #[post("/echo")]
@@ -13,6 +15,8 @@ async fn manual_hello() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    let db: DatabaseConnection = Database::connect("postgres://messaging_api:messaging_api@messaging_api_db.docker/messaging_api").await.expect("Something went wrong");
+
     HttpServer::new(|| {
         App::new()
             .service(
