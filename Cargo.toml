@@ -1,5 +1,4 @@
 [workspace]
-#members = [".", "entity", "migration"]
 members = [".", "migration"]
 
 [package]
@@ -8,7 +7,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-#entity = { path = "entity" }
 migration = { path = "migration" }
 actix-web = "4"
 cargo-watch = "8.5.2"
@@ -20,3 +18,12 @@ sea-orm = { version = "0.12", features = [
     "with-time"
 ]}
 sea-orm-migration = "0.12.14"
+utc = "0.2.0"
+
+[dependencies.uuid]
+version = "1.7.0"
+features = [
+    "v4",
+    "fast-rng",
+    "macro-diagnostics",
+]

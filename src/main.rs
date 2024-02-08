@@ -1,8 +1,13 @@
-use actix_web::{post, web, App, HttpResponse, HttpServer, Responder};
-
-use sea_orm::{ Database, DatabaseConnection };
-
 mod routes;
+mod entity;
+
+use actix_web::{post, web, App, HttpResponse, HttpServer, Responder};
+use sea_orm::{ Database, DatabaseConnection };
+use sea_orm::ActiveValue::Set;
+use crate::entity::messages;
+use crate::entity::messages::ActiveModel;
+
+
 
 #[post("/echo")]
 async fn echo(req_body: String) -> impl Responder {
@@ -10,7 +15,12 @@ async fn echo(req_body: String) -> impl Responder {
 }
 
 async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
+    HttpResponse::Ok().body("Hey there!");
+
+    let test_model: ActiveModel = messages::ActiveModel{
+        body: Set("Hallo dit is mijn eerste bericht".to_owned()),
+        date_time: UTC
+    }
 }
 
 #[actix_web::main]
