@@ -1,5 +1,5 @@
 [workspace]
-members = [".", "migration"]
+members = [".", "migration", "entity"]
 
 [package]
 name = "messaging_api"
@@ -8,6 +8,7 @@ edition = "2021"
 
 [dependencies]
 migration = { path = "migration" }
+entity = { path = "entity" }
 actix-web = "4"
 cargo-watch = "8.5.2"
 log = "0.4.20"
@@ -18,12 +19,7 @@ sea-orm = { version = "0.12", features = [
     "with-time"
 ]}
 sea-orm-migration = "0.12.14"
-utc = "0.2.0"
-
-[dependencies.uuid]
-version = "1.7.0"
-features = [
-    "v4",
-    "fast-rng",
-    "macro-diagnostics",
-]
+chrono = "0.4.34"
+uuid = { version = "1.7.0", features = [
+    "v4"
+] }

@@ -1,13 +1,11 @@
 mod routes;
-mod entity;
 
 use actix_web::{post, web, App, HttpResponse, HttpServer, Responder};
-use sea_orm::{ Database, DatabaseConnection };
+use chrono::Utc;
+use entity::messages;
+use uuid::Uuid;
+use sea_orm::{ActiveModelTrait, Database, DatabaseConnection};
 use sea_orm::ActiveValue::Set;
-use crate::entity::messages;
-use crate::entity::messages::ActiveModel;
-
-
 
 #[post("/echo")]
 async fn echo(req_body: String) -> impl Responder {
@@ -15,12 +13,19 @@ async fn echo(req_body: String) -> impl Responder {
 }
 
 async fn manual_hello() -> impl Responder {
+    let db: DatabaseConnection = Database::connect("postgres://messaging_api:messaging_api@messaging_api_db.docker/messaging_api").await.expect("Something went wrong");
+
     HttpResponse::Ok().body("Hey there!");
 
-    let test_model: ActiveModel = messages::ActiveModel{
+    let messaage = messages::ActiveModel{
         body: Set("Hallo dit is mijn eerste bericht".to_owned()),
-        date_time: UTC
-    }
+        date_time: Set(Utc::now().naive_utc()),
+        ..Default::default()
+    };
+
+    messaage.insert(&db).await.expect("TODO: panic message");
+
+    HttpResponse::Ok().body("We just created something")
 }
 
 #[actix_web::main]
