@@ -23,3 +23,4 @@ chrono = "0.4.34"
 uuid = { version = "1.7.0", features = [
     "v4"
 ] }
+dotenv = "0.15.0"

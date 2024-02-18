@@ -14,7 +14,7 @@ async fn echo(req_body: String) -> impl Responder {
 
 async fn manual_hello() -> impl Responder {
     let db: DatabaseConnection = Database::connect("postgres://messaging_api:messaging_api@messaging_api_db.docker/messaging_api").await.expect("Something went wrong");
-
+    
     HttpResponse::Ok().body("Hey there!");
 
     let messaage = messages::ActiveModel{
