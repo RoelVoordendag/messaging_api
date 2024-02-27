@@ -7,7 +7,8 @@
 - [X] Do initial bootstrap for connection with DB.
 - [ ] Setup socket connections
 - [ ] During socket connection save messages
-- [ ] Users we need to save user names
+  - [ ] Users we need to save user names
+    - [ ] Combine usernames to messages
 
 use migration::{Migrator, MigratorTrait};
 
