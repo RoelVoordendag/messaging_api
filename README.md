@@ -1,12 +1,13 @@
 ## Todo:
 - [ ] Create routes for sending messages
     - [ ] Handling the saving of the new items inside it
+    - [ ] We need to learn how to handle json import
 - [x] Setup database (POSTGRES) -> docker?
-- [ ] Research what kind of cargos can I use to connect to a DB (Diesel)
-- [ ] Do initial bootstrap for connection with DB.
+- [X] Research what kind of cargos can I use to connect to a DB (Diesel)
+- [X] Do initial bootstrap for connection with DB.
 - [ ] Setup socket connections
 - [ ] During socket connection save messages
-- [ ] Users?
+- [ ] Users we need to save user names
 
 use migration::{Migrator, MigratorTrait};
 
