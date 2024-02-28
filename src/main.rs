@@ -1,7 +1,6 @@
 mod routes;
 
 use actix_web::{post, web, App, HttpResponse, HttpServer, Responder};
-use sea_orm::{ActiveModelTrait, Database, DatabaseConnection};
 use dotenv::dotenv;
 
 #[post("/echo")]
@@ -16,7 +15,8 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .service(
-                web::scope("/app")
+                web::scope("/api")
+                    .app_data(web::JsonConfig::default())
                     .route("/message", web::post().to(routes::messages::create_message))
             )
             .service(echo)
