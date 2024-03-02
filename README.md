@@ -24,14 +24,12 @@ todo:
 ```mermaid
 ---
 Title: Structure of saving message
-  
+--- 
+ 
 classDiagram
     Users : +string uuid
-    Users: +string username
+    Users : +string username
     
-    ---
-title: Animal example
----
 classDiagram
     note "From Duck till Zebra"
     Animal <|-- Duck
@@ -55,11 +53,7 @@ classDiagram
         +bool is_wild
         +run()
     }
-    
-        
-
-
-
+   
 ```
 
 
