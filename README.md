@@ -16,57 +16,33 @@ let connection = sea_orm::Database::connect(&database_url).await?;
 Migrator::up(&connection, None).await?;
 
 
-Idea
-
-todo:
-[ ] Write mermaid
+The idea of how we will save stuff is that there is a room where we connect
+the people in it. This means that 2 users in a means it is a personal chat and multiple people.
+Inside the message we save to which room id it is stored. (this might change over time)
 
 ```mermaid
 ---
-Title: Structure of saving message
---- 
- 
+Title: Flow of saving of messages
+---
+
 classDiagram
-    Users : +string uuid
-    Users : +string username
-    
-classDiagram
-    note "From Duck till Zebra"
-    Animal <|-- Duck
-    note for Duck "can fly\ncan swim\ncan dive\ncan help in debugging"
-    Animal <|-- Fish
-    Animal <|-- Zebra
-    Animal : +int age
-    Animal : +String gender
-    Animal: +isMammal()
-    Animal: +mate()
-    class Duck{
-        +String beakColor
-        +swim()
-        +quack()
-    }
-    class Fish{
-        -int sizeInFeet
-        -canEat()
-    }
-    class Zebra{
-        +bool is_wild
-        +run()
-    }
-   
+
+    Message: uuid
+    Message: body
+    Message: roomid
+
+    Users: uuid
+    Users: username
+
+
+    Rooms: uuid
+    Rooms: name
+
+    RoomsUsers: userid
+    RoomsUsers: roomsid
+
+    Message <|-- Rooms
+
+    RoomsUsers <|-- Users
+    RoomsUsers <|-- Rooms   
 ```
-
-
-- Users
-  - username
-
-- Connection table
-  - Users and room
-
-- Rooms
-  - id
-  - meta data
-
-- Message
-  - id
-  - room id -> which room
