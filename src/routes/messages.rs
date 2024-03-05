@@ -1,4 +1,3 @@
-// @todo We need to serve this over controllers over time.
 use std::env;
 use actix_web::{HttpResponse, Responder, web};
 use chrono::Utc;
@@ -25,5 +24,5 @@ pub async fn create_message(message: web::Json<Message>) -> impl Responder {
 
     message_entity.insert(&db).await.expect("Could not insert message");
 
-    HttpResponse::Ok().body("We just created something")
+    HttpResponse::Ok().body("Created new Message")
 }

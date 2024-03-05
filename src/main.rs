@@ -17,7 +17,8 @@ async fn main() -> std::io::Result<()> {
             .service(
                 web::scope("/api")
                     .app_data(web::JsonConfig::default())
-                    .route("/message", web::post().to(routes::messages::create_message))
+                    .route("/messages", web::post().to(routes::messages::create_message))
+                    .route("/users", web::post().to(routes::users::create_user))
             )
             .service(echo)
     })
