@@ -2,6 +2,7 @@ use std::env;
 use serde::Deserialize;
 use entity::users;
 use actix_web::{web, Responder, HttpResponse};
+use chrono::Utc;
 use sea_orm::{Database, DatabaseConnection, ActiveModelTrait};
 use sea_orm::ActiveValue::Set;
 
@@ -17,6 +18,7 @@ pub async fn create_user(user: web::Json<User>) -> impl Responder {
 
     let user_entity = users::ActiveModel{
         name: Set(user.name.to_owned()),
+        created_at: Set(Utc::now().naive_utc()),
         ..Default::default()
     };
 
