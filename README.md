@@ -1,7 +1,7 @@
 ## Todo:
-- [ ] Create routes for sending messages
-    - [ ] Handling the saving of the new items inside it
-    - [ ] We need to learn how to handle json import
+- [X] Create routes for sending messages
+    - [X] Handling the saving of the new items inside it
+    - [X] We need to learn how to handle json import
 - [x] Setup database (POSTGRES) -> docker?
 - [X] Research what kind of cargos can I use to connect to a DB (Diesel)
 - [X] Do initial bootstrap for connection with DB.
@@ -9,6 +9,12 @@
 - [ ] During socket connection save messages
   - [ ] Users we need to save user names
     - [ ] Combine usernames to messages
+- [ ] Need to better routing inside actix web
+  - [ ] Pass db connection to endpoints, so we do not have to initialize it everytime
+  - [ ] We need to check what the proper way is of handling multiple routes because currently I do not have the feeling this is correct
+- Error Handling
+  - [ ] Learn on how to handle errors from find queries
+  - [ ] How do I return a error from the API when something is not correct 
 
 use migration::{Migrator, MigratorTrait};
 
