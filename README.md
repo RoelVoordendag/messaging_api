@@ -10,11 +10,11 @@
   - [ ] Users we need to save user names
     - [ ] Combine usernames to messages
 - [ ] Need to better routing inside actix web
-  - [ ] Pass db connection to endpoints, so we do not have to initialize it everytime
+  - [X] Pass db connection to endpoints, so we do not have to initialize it everytime
   - [ ] We need to check what the proper way is of handling multiple routes because currently I do not have the feeling this is correct
 - Error Handling
-  - [ ] Learn on how to handle errors from find queries
-  - [ ] How do I return a error from the API when something is not correct 
+  - [X] Learn on how to handle errors from find queries
+  - [X] How do I return a error from the API when something is not correct 
 
 use migration::{Migrator, MigratorTrait};
 
