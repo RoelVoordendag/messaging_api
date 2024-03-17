@@ -21,8 +21,7 @@ pub async fn create_user(app_state: web::Data<AppState> , request_data: web::Jso
         .await.expect("Something went wrong collecting data");
 
     if user != None {
-        // @todo we no return a error
-        println!("test, {}", user.unwrap().name);
+        return HttpResponse::NotAcceptable().body("User already exists");
     }
 
     let user_entity = users::ActiveModel{
@@ -33,5 +32,5 @@ pub async fn create_user(app_state: web::Data<AppState> , request_data: web::Jso
 
     user_entity.insert(database_connection).await.expect("Something went wrong with creation user");
 
-    HttpResponse::Ok().body("Created new user")
+    return HttpResponse::Ok().body("Created new user")
 }

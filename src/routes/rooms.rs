@@ -1,4 +1,3 @@
-use std::env;
 use actix_web::{web, Responder, HttpResponse};
 use chrono::Utc;
 use entity::rooms;
