@@ -21,7 +21,9 @@ sea-orm = { version = "0.12", features = [
 sea-orm-migration = "0.12.14"
 chrono = "0.4.34"
 uuid = { version = "1.7.0", features = [
-    "v4"
+    "v4",
+    "fast-rng",
+    "macro-diagnostics",
 ] }
 dotenv = "0.15.0"
 serde = { version = "1.0.196", features = ["derive"] }

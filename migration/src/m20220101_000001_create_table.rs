@@ -14,9 +14,8 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(
                         ColumnDef::new(Messages::Id)
-                            .integer()
                             .not_null()
-                            .auto_increment()
+                            .uuid()
                             .primary_key(),
                     )
                     .col(ColumnDef::new(Messages::Body).text().not_null())

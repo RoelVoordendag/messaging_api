@@ -1,9 +1,10 @@
 use actix_web::{HttpResponse, Responder, web};
 use chrono::Utc;
-use sea_orm::{ActiveModelTrait};
+use sea_orm::{ActiveModelTrait, IntoActiveValue};
 use sea_orm::ActiveValue::Set;
 use entity::messages;
 use serde::Deserialize;
+use uuid::Uuid;
 use crate::AppState;
 
 #[derive(Deserialize)]
@@ -17,6 +18,7 @@ pub async fn create_message(app_state: web::Data<AppState>, message: web::Json<M
     let message_entity = messages::ActiveModel{
         body: Set(message.body.to_owned()),
         date_time: Set(Utc::now().naive_utc()),
+        id: Uuid::new_v4().into_active_value(),
         ..Default::default()
     };
 

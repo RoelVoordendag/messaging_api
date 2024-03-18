@@ -3,7 +3,8 @@ use entity::users;
 use entity::users::Entity as UserLoader;
 use actix_web::{web, Responder, HttpResponse};
 use chrono::Utc;
-use sea_orm::{ActiveModelTrait, QueryFilter, ColumnTrait, EntityTrait};
+use uuid::Uuid;
+use sea_orm::{ActiveModelTrait, QueryFilter, ColumnTrait, EntityTrait, IntoActiveValue};
 use sea_orm::ActiveValue::Set;
 use crate::AppState;
 
@@ -27,6 +28,7 @@ pub async fn create_user(app_state: web::Data<AppState> , request_data: web::Jso
     let user_entity = users::ActiveModel{
         name: Set(request_data.name.to_owned()),
         created_at: Set(Utc::now().naive_utc()),
+        id: Uuid::new_v4().into_active_value(),
         ..Default::default()
     };
 

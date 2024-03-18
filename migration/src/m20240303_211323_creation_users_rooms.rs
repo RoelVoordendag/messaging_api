@@ -13,9 +13,8 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(
                         ColumnDef::new(Users::Id)
-                            .integer()
                             .not_null()
-                            .auto_increment()
+                            .uuid()
                             .primary_key(),
                     )
                     .col(ColumnDef::new(Users::Name).string().not_null())
@@ -30,9 +29,8 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(
                         ColumnDef::new(Rooms::Id)
-                            .integer()
                             .not_null()
-                            .auto_increment()
+                            .uuid()
                             .primary_key(),
                     )
                     .col(ColumnDef::new(Rooms::Name).string().not_null())
