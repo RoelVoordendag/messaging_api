@@ -16,23 +16,23 @@ pub struct User {
 pub async fn create_user(app_state: web::Data<AppState> , request_data: web::Json<User>) -> impl Responder {
     let database_connection = &app_state.database_connection;
 
-    let user: Option<users::Model> = UserLoader::find()
+    let existing_user: Option<users::Model> = UserLoader::find()
         .filter(users::Column::Name.contains(request_data.name.to_owned()))
         .one(database_connection)
         .await.expect("Something went wrong collecting data");
 
-    if user != None {
+    if existing_user != None {
         return HttpResponse::NotAcceptable().body("User already exists");
     }
 
-    let user_entity = users::ActiveModel{
+    let user = users::ActiveModel{
         name: Set(request_data.name.to_owned()),
         created_at: Set(Utc::now().naive_utc()),
         id: Uuid::new_v4().into_active_value(),
         ..Default::default()
     };
 
-    user_entity.insert(database_connection).await.expect("Something went wrong with creation user");
+    user.insert(database_connection).await.expect("Something went wrong with creation user");
 
     return HttpResponse::Ok().body("Created new user")
 }

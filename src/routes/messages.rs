@@ -18,14 +18,14 @@ pub async fn create_message(app_state: web::Data<AppState>, request_data: web::J
 
     let user_id = Uuid::parse_str(&request_data.user_id).unwrap();
 
-    let message_entity = messages::ActiveModel{
+    let message = messages::ActiveModel{
         body: Set(request_data.body.to_owned()),
         date_time: Set(Utc::now().naive_utc()),
         id: Uuid::new_v4().into_active_value(),
         user_id: user_id.into_active_value(),
     };
 
-    message_entity.insert(database_connection).await.expect("Could not insert message");
+    message.insert(database_connection).await.expect("Could not insert message");
 
     HttpResponse::Ok().body("Created new Message")
 }

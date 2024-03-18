@@ -15,14 +15,14 @@ pub struct Room {
 pub async fn create_room(app_state: web::Data<AppState>, request_data: web::Json<Room>) -> impl Responder {
     let database_connection = &app_state.database_connection;
 
-    let room_entity = rooms::ActiveModel{
+    let room = rooms::ActiveModel{
         name: Set(request_data.name.to_owned()),
         created_at: Set(Utc::now().naive_utc()),
         id: Uuid::new_v4().into_active_value(),
         ..Default::default()
     };
 
-    room_entity.insert(database_connection).await.expect("Could not insert room");
+    room.insert(database_connection).await.expect("Could not insert room");
 
     HttpResponse::Ok().body("Created new room")
 }
