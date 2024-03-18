@@ -15,6 +15,7 @@
 - Error Handling
   - [X] Learn on how to handle errors from find queries
   - [X] How do I return a error from the API when something is not correct 
+  - [ ] How do we catch errors when unwrapping uuid parses
 
 use migration::{Migrator, MigratorTrait};
 
@@ -26,6 +27,12 @@ The idea of how we will save stuff is that there is a room where we connect
 the people in it. This means that 2 users in a means it is a personal chat and multiple people.
 Inside the message we save to which room id it is stored. (this might change over time)
 
+A message is many to one to a user
+A message is a many to many with a room
+
+User to Rooms can many to many
+
+#todo update this diagram
 ```mermaid
 ---
 Title: Flow of saving of messages
