@@ -5,7 +5,8 @@ use sea_orm::ActiveValue::Set;
 use entity::messages;
 use serde::Deserialize;
 use uuid::Uuid;
-use crate::AppState;
+use libs::uuid_util::UuidService;
+use crate::{AppState, libs};
 
 #[derive(Deserialize)]
 pub struct Message {
@@ -16,6 +17,10 @@ pub struct Message {
 pub async fn create_message(app_state: web::Data<AppState>, request_data: web::Json<Message>) -> impl Responder {
     let database_connection = &app_state.database_connection;
 
+    if UuidService::is_uuid_valid(&request_data.user_id) == false {
+        return HttpResponse::NotAcceptable().body("User id is not a valid UUID");
+    }
+
     let user_id = Uuid::parse_str(&request_data.user_id).unwrap();
 
     let message = messages::ActiveModel{
@@ -25,7 +30,8 @@ pub async fn create_message(app_state: web::Data<AppState>, request_data: web::J
         user_id: user_id.into_active_value(),
     };
 
-    message.insert(database_connection).await.expect("Could not insert message");
-
-    HttpResponse::Ok().body("Created new Message")
+    match message.insert(database_connection).await {
+        Ok(_) => HttpResponse::Ok().body("Created new Message."),
+        Err(_) => HttpResponse::InternalServerError().body("Could not insert message")
+    }
 }

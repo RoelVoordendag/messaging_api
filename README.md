@@ -15,7 +15,11 @@
 - Error Handling
   - [X] Learn on how to handle errors from find queries
   - [X] How do I return a error from the API when something is not correct 
-  - [ ] How do we catch errors when unwrapping uuid parses
+  - [X] How do we catch errors when unwrapping uuid parses
+- Architect code
+  - [X] Implement one 'impl'
+  - [ ] Implement impl with struct
+  - [ ] rewrite messages.rs
 
 use migration::{Migrator, MigratorTrait};
 
