@@ -59,7 +59,7 @@ pub enum Users {
 }
 
 #[derive(DeriveIden)]
-enum Rooms {
+pub enum Rooms {
     Table,
     Id,
     Name,
