@@ -1,24 +1,27 @@
 use actix_web::{HttpResponse, Responder, web};
 use chrono::Utc;
-use sea_orm::{ActiveModelTrait, EntityTrait, IntoActiveValue, LoaderTrait};
+use sea_orm::{ActiveModelTrait, EntityTrait, IntoActiveValue, LoaderTrait, TransactionTrait};
 use sea_orm::ActiveValue::Set;
-use entity::{messages, rooms};
+use entity::{messages, rooms, message_room};
 use serde::Deserialize;
 use uuid::Uuid;
 use entity::prelude::{MessageRoom, Messages, Rooms};
 use libs::uuid_util::UuidService;
 use libs::user_loader::UserLoader;
+use libs::room_loader::RoomLoader;
 use crate::{AppState, libs};
 
 #[derive(Deserialize)]
 pub struct Message {
     body: String,
     user_id: String,
+    room_id: String,
 }
 
 pub async fn create_message(app_state: web::Data<AppState>, request_data: web::Json<Message>) -> impl Responder {
     let database_connection = &app_state.database_connection;
 
+    // @todo can we write this to a match function?
     if UuidService::is_uuid_valid(&request_data.user_id) == false {
         return HttpResponse::NotAcceptable().body("User id is not a valid UUID");
     }
@@ -33,16 +36,40 @@ pub async fn create_message(app_state: web::Data<AppState>, request_data: web::J
         return HttpResponse::NotFound().body("User Not found");
     }
 
+    if UuidService::is_uuid_valid(&request_data.room_id) == false {
+        return HttpResponse::NotAcceptable().body("Room id is not a valid UUID");
+    }
+
+    let room_id = Uuid::parse_str(&request_data.room_id).unwrap();
+
+    let room_loader = RoomLoader {
+        db: database_connection.to_owned()
+    };
+
+    if room_loader.room_exist(room_id).await == false {
+        return HttpResponse::NotFound().body("Room Not found");
+    }
+
+    // @todo we need to rewrite this transaction better
+    let transaction = database_connection.begin().await.unwrap();
+
     let message = messages::ActiveModel{
         body: Set(request_data.body.to_owned()),
         date_time: Set(Utc::now().naive_utc()),
         id: Uuid::new_v4().into_active_value(),
         user_id: user_id.into_active_value(),
-    };
+    }.save(&transaction).await.expect("lmao");
 
-    match message.insert(database_connection).await {
-        Ok(_) => HttpResponse::Ok().body("Created new Message."),
-        Err(_) => HttpResponse::InternalServerError().body("Could not insert message")
+    message_room::ActiveModel {
+        room_id: room_id.into_active_value(),
+        message_id: message.id,
+    }.save(&transaction).await.expect("lmao");
+
+    match transaction.commit().await {
+        Ok(()) => HttpResponse::Ok().body("Created new Message."),
+        Err(_) =>  {
+            HttpResponse::InternalServerError().body("Could not insert message")
+        }
     }
 }
 

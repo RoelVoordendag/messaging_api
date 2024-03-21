@@ -19,7 +19,6 @@ pub async fn create_room(app_state: web::Data<AppState>, request_data: web::Json
         name: Set(request_data.name.to_owned()),
         created_at: Set(Utc::now().naive_utc()),
         id: Uuid::new_v4().into_active_value(),
-        ..Default::default()
     };
 
     room.insert(database_connection).await.expect("Could not insert room");

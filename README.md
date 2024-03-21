@@ -18,8 +18,20 @@
   - [X] How do we catch errors when unwrapping uuid parses
 - Architect code
   - [X] Implement one 'impl'
-  - [ ] Implement impl with struct
+  - [X] Implement impl with struct
+  - [ ] trait vs impl
+- Rooms
+  - [ ] Save more info in rooms
+  - [ ] Create for rooms to collect rooms with bound users
+  - [ ] Think about how we are going to setup private conversation inside database
+- Users
+  - [ ] Create user endpoint to collect his rooms information
+- Messages
+  - [ ] Collect messages for room and see what messages are from whom and bound to room
+  - [ ] Save connection to room also with message inside transaction
   - [ ] rewrite messages.rs
+- Api
+  - [ ] Write match impl for standard authentication
 
 use migration::{Migrator, MigratorTrait};
 
