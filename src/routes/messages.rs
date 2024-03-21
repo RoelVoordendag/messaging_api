@@ -7,6 +7,7 @@ use serde::Deserialize;
 use uuid::Uuid;
 use entity::prelude::{MessageRoom, Messages, Rooms};
 use libs::uuid_util::UuidService;
+use libs::user_loader::UserLoader;
 use crate::{AppState, libs};
 
 #[derive(Deserialize)]
@@ -24,7 +25,13 @@ pub async fn create_message(app_state: web::Data<AppState>, request_data: web::J
 
     let user_id = Uuid::parse_str(&request_data.user_id).unwrap();
 
-    // @todo we need to check if the user really exist otherwise give error
+    let user_service = UserLoader {
+        db: database_connection.to_owned()
+    };
+
+    if user_service.user_exist(user_id).await == false {
+        return HttpResponse::NotFound().body("User Not found");
+    }
 
     let message = messages::ActiveModel{
         body: Set(request_data.body.to_owned()),
