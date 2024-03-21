@@ -13,32 +13,44 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(MessageRoom::Table)
                     .if_not_exists()
-                    .col(
-                        ColumnDef::new(MessageRoom::Id)
-                            .uuid()
-                            .not_null()
-                            .primary_key(),
-                    )
                     .col(ColumnDef::new(MessageRoom::MessageId).uuid().not_null())
                     .col(ColumnDef::new(MessageRoom::RoomId).uuid().not_null())
+                    .primary_key(
+                        Index::create()
+                            .table(MessageRoom::Table)
+                            .col(MessageRoom::MessageId)
+                            .col(MessageRoom::RoomId),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk-messages_room-message-id")
+                            .from(MessageRoom::Table, MessageRoom::MessageId)
+                            .to(Messages::Table, Messages::Id)
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk-messages_room-room-id")
+                            .from(MessageRoom::Table, MessageRoom::RoomId)
+                            .to(Rooms::Table, Rooms::Id)
+                    )
                     .to_owned(),
-            ).await.expect("Something went wrong when creating MessageRoom");
+            ).await
 
-        manager.create_foreign_key(
-            ForeignKey::create()
-                .name("fk-messages_room-message-id")
-                .from(MessageRoom::Table, MessageRoom::MessageId)
-                .to(Messages::Table, Messages::Id)
-                .to_owned()
-        ).await.expect("Creating foreign key fk-messages_room-message_id did not succeed");
-
-        manager.create_foreign_key(
-            ForeignKey::create()
-                .name("fk-messages_room-room-id")
-                .from(MessageRoom::Table, MessageRoom::RoomId)
-                .to(Rooms::Table, Rooms::Id)
-                .to_owned()
-        ).await
+        // manager.create_foreign_key(
+        //     ForeignKey::create()
+        //         .name("fk-messages_room-message-id")
+        //         .from(MessageRoom::Table, MessageRoom::MessageId)
+        //         .to(Messages::Table, Messages::Id)
+        //         .to_owned()
+        // ).await.expect("Creating foreign key fk-messages_room-message_id did not succeed");
+        //
+        // manager.create_foreign_key(
+        //     ForeignKey::create()
+        //         .name("fk-messages_room-room-id")
+        //         .from(MessageRoom::Table, MessageRoom::RoomId)
+        //         .to(Rooms::Table, Rooms::Id)
+        //         .to_owned()
+        // ).await
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
@@ -63,7 +75,6 @@ impl MigrationTrait for Migration {
 #[derive(DeriveIden)]
 enum MessageRoom {
     Table,
-    Id,
     RoomId,
     MessageId,
 }

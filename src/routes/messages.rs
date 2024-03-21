@@ -1,10 +1,11 @@
 use actix_web::{HttpResponse, Responder, web};
 use chrono::Utc;
-use sea_orm::{ActiveModelTrait, IntoActiveValue};
+use sea_orm::{ActiveModelTrait, EntityTrait, IntoActiveValue, LoaderTrait};
 use sea_orm::ActiveValue::Set;
-use entity::messages;
+use entity::{messages, rooms};
 use serde::Deserialize;
 use uuid::Uuid;
+use entity::prelude::{MessageRoom, Messages, Rooms};
 use libs::uuid_util::UuidService;
 use crate::{AppState, libs};
 
@@ -23,6 +24,8 @@ pub async fn create_message(app_state: web::Data<AppState>, request_data: web::J
 
     let user_id = Uuid::parse_str(&request_data.user_id).unwrap();
 
+    // @todo we need to check if the user really exist otherwise give error
+
     let message = messages::ActiveModel{
         body: Set(request_data.body.to_owned()),
         date_time: Set(Utc::now().naive_utc()),
@@ -35,3 +38,21 @@ pub async fn create_message(app_state: web::Data<AppState>, request_data: web::J
         Err(_) => HttpResponse::InternalServerError().body("Could not insert message")
     }
 }
+
+pub async fn get_messages(app_state: web::Data<AppState>) -> impl Responder {
+    let database_connection = &app_state.database_connection;
+
+    let found: Vec<entity::messages::Model> = Messages::find().all(database_connection).await.expect("testing");
+    let rooms: Vec<Vec<rooms::Model>> = found.load_many_to_many(Rooms, MessageRoom, database_connection).await.expect("lmao");
+
+    for message in found.iter()  {
+        println!("{message:?}\n");
+    }
+
+    for room in rooms.iter()  {
+        println!("{room:?}\n");
+    }
+
+    HttpResponse::Ok().body("these are the messages")
+}
+
