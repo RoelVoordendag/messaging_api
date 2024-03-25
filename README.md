@@ -23,12 +23,13 @@
 - Rooms
   - [ ] Save more info in rooms
   - [ ] Create for rooms to collect rooms with bound users
-  - [ ] Think about how we are going to setup private conversation inside database
+  - [X] Think about how we are going to setup private conversation inside database
+    - If there are two persons then we can just set a normal name and be done with it
 - Users
   - [ ] Create user endpoint to collect his rooms information
 - Messages
   - [ ] Collect messages for room and see what messages are from whom and bound to room
-  - [ ] Save connection to room also with message inside transaction
+  - [X] Save connection to room also with message inside transaction
   - [ ] rewrite messages.rs
 - Api
   - [ ] Write match impl for standard authentication
