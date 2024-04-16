@@ -21,6 +21,7 @@ pub struct Message {
 pub async fn create_message(app_state: web::Data<AppState>, request_data: web::Json<Message>) -> impl Responder {
     let database_connection = &app_state.database_connection;
 
+    // Check if user is valid and exist
     if UuidService::is_uuid_valid(&request_data.user_id) == false {
         return HttpResponse::NotAcceptable().body("User id is not a valid UUID");
     }
@@ -35,6 +36,7 @@ pub async fn create_message(app_state: web::Data<AppState>, request_data: web::J
         return HttpResponse::NotFound().body("User Not found");
     }
 
+    // Check if room is valid and exist
     if UuidService::is_uuid_valid(&request_data.room_id) == false {
         return HttpResponse::NotAcceptable().body("Room id is not a valid UUID");
     }
@@ -48,6 +50,8 @@ pub async fn create_message(app_state: web::Data<AppState>, request_data: web::J
     if room_loader.room_exist(room_id).await == false {
         return HttpResponse::NotFound().body("Room Not found");
     }
+
+    // Check if the user and room combination exist
 
     match database_connection.transaction::<_, (), DbErr>(|txn| {
         Box::pin(async move {

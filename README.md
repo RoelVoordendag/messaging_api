@@ -21,10 +21,10 @@
   - [X] Implement impl with struct
   - [ ] trait vs impl
 - Rooms
-  - [ ] Save more info in rooms
   - [ ] Create for rooms to collect rooms with bound users
+  - [ ] Save more info in rooms
   - [X] Think about how we are going to setup private conversation inside database
-    - If there are two persons then we can just set a normal name and be done with it
+    - [ ] If there are two persons then we can just set a normal name and be done with it
 - Users
   - [ ] Create user endpoint to collect his rooms information
 - Messages
@@ -32,13 +32,7 @@
   - [X] Save connection to room also with message inside transaction
   - [ ] rewrite messages.rs
 - Api
-  - [ ] Write match impl for standard authentication
-
-use migration::{Migrator, MigratorTrait};
-
-let connection = sea_orm::Database::connect(&database_url).await?;
-Migrator::up(&connection, None).await?;
-
+  - [ ] Write match impl for standard authentication or middleware?
 
 The idea of how we will save stuff is that there is a room where we connect
 the people in it. This means that 2 users in a means it is a personal chat and multiple people.

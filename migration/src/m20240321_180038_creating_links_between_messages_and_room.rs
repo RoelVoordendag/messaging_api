@@ -33,24 +33,8 @@ impl MigrationTrait for Migration {
                             .from(MessageRoom::Table, MessageRoom::RoomId)
                             .to(Rooms::Table, Rooms::Id)
                     )
-                    .to_owned(),
+                    .to_owned()
             ).await
-
-        // manager.create_foreign_key(
-        //     ForeignKey::create()
-        //         .name("fk-messages_room-message-id")
-        //         .from(MessageRoom::Table, MessageRoom::MessageId)
-        //         .to(Messages::Table, Messages::Id)
-        //         .to_owned()
-        // ).await.expect("Creating foreign key fk-messages_room-message_id did not succeed");
-        //
-        // manager.create_foreign_key(
-        //     ForeignKey::create()
-        //         .name("fk-messages_room-room-id")
-        //         .from(MessageRoom::Table, MessageRoom::RoomId)
-        //         .to(Rooms::Table, Rooms::Id)
-        //         .to_owned()
-        // ).await
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {

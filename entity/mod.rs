@@ -5,4 +5,5 @@ pub mod prelude;
 pub mod message_room;
 pub mod messages;
 pub mod rooms;
+pub mod user_room;
 pub mod users;

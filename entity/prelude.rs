@@ -3,4 +3,5 @@
 pub use super::message_room::Entity as MessageRoom;
 pub use super::messages::Entity as Messages;
 pub use super::rooms::Entity as Rooms;
+pub use super::user_room::Entity as UserRoom;
 pub use super::users::Entity as Users;
