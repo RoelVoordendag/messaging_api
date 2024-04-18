@@ -32,6 +32,7 @@
   - [X] Save connection to room also with message inside transaction
   - [ ] rewrite messages.rs
 - Api
+  - [ ] Create route endpoint where we can set users to rooms and check it
   - [ ] Write match impl for standard authentication or middleware?
 
 The idea of how we will save stuff is that there is a room where we connect
