@@ -9,4 +9,4 @@ name = "entity"
 path = "mod.rs"
 
 [dependencies.sea-orm]
-version = "0.12.14"
+version = "1.0.0"

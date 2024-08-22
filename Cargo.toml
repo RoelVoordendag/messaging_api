@@ -12,13 +12,13 @@ entity = { path = "entity" }
 actix-web = "4"
 actix-web-lab = "0.20.2"
 log = "0.4.20"
-sea-orm = { version = "0.12.15", features = [
+sea-orm = { version = "1.0.0", features = [
     "sqlx-postgres",
     "runtime-tokio-native-tls",
     "macros",
     "with-time"
 ]}
-sea-orm-migration = "0.12.14"
+sea-orm-migration = "1.0.0"
 chrono = "0.4.34"
 uuid = { version = "1.8.0", features = [
     "v4",
