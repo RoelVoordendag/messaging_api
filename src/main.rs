@@ -1,9 +1,9 @@
 mod routes;
 
-use std::env;
 use actix_web::{web, App, HttpServer};
 use dotenv::dotenv;
 use sea_orm::{Database, DatabaseConnection};
+use std::env;
 
 #[derive(Debug, Clone)]
 struct AppState {
@@ -15,9 +15,11 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
 
     let database_url = env::var("DATABASE_URL").expect("The database url is not set");
-    let db_connection =  Database::connect(database_url).await.unwrap();
+    let db_connection = Database::connect(database_url).await.unwrap();
 
-    let app_state = AppState { database_connection: db_connection };
+    let app_state = AppState {
+        database_connection: db_connection,
+    };
 
     HttpServer::new(move || {
         App::new()
@@ -25,12 +27,19 @@ async fn main() -> std::io::Result<()> {
             .service(
                 web::scope("/api")
                     .app_data(web::JsonConfig::default())
-                    .route("/messages", web::post().to(routes::messages::create_message))
+                    .route(
+                        "/messages",
+                        web::post().to(routes::messages::create_message),
+                    )
                     .route("/users", web::post().to(routes::users::create_user))
-                    .route("/room", web::post().to(routes::rooms::create_room))
+                    .route(
+                        "/users/create",
+                        web::post().to(routes::users::get_or_create_user),
+                    )
+                    .route("/room", web::post().to(routes::rooms::create_room)),
             )
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("127.0.0.1", 3030))?
     .run()
     .await
 }

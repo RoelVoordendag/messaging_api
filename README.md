@@ -14,8 +14,9 @@
   - [ ] We need to check what the proper way is of handling multiple routes because currently I do not have the feeling this is correct
 - Error Handling
   - [X] Learn on how to handle errors from find queries
-  - [X] How do I return a error from the API when something is not correct 
+  - [X] How do I return a error from the API when something is not correct
   - [ ] How do we catch errors when unwrapping uuid parses
+- Look into https://www.sea-ql.org/SeaORM/docs/next/basic-crud/insert/#set-activemodel-from-json-value to make life easier with user input
 
 use migration::{Migrator, MigratorTrait};
 
@@ -57,5 +58,5 @@ classDiagram
     Message <|-- Rooms
 
     RoomsUsers <|-- Users
-    RoomsUsers <|-- Rooms   
+    RoomsUsers <|-- Rooms
 ```
