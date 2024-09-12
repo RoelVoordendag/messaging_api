@@ -39,7 +39,7 @@ async fn main() -> std::io::Result<()> {
                     .route("/room", web::post().to(routes::rooms::create_room)),
             )
     })
-    .bind(("127.0.0.1", 3030))?
+    .bind(("127.0.0.1", 4040))?
     .run()
     .await
 }

@@ -53,13 +53,15 @@ pub async fn get_or_create_user(
     let db_connection = &app_state.database_connection;
 
     let exisiting_user: Option<JsonValue> = UserLoader::find()
-        .filter(users::Column::Name.contains(request_data.name.to_owned()))
+        // @todo should we lower this whole string
+        .filter(users::Column::Name.eq(request_data.name.to_owned()))
         .into_json()
         .one(db_connection)
         .await
         .expect("Something went wrong querying the database.");
 
     if exisiting_user != None {
+        // @todo we need to add rooms if users has them
         return HttpResponse::Ok().json(exisiting_user);
     }
 
