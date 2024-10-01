@@ -11,38 +11,32 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(Users::Table)
                     .if_not_exists()
-                    .col(
-                        ColumnDef::new(Users::Id)
-                            .not_null()
-                            .uuid()
-                            .primary_key(),
-                    )
+                    .col(ColumnDef::new(Users::Id).not_null().uuid().primary_key())
                     .col(ColumnDef::new(Users::Name).string().not_null())
                     .col(ColumnDef::new(Users::CreatedAt).date_time().not_null())
                     .to_owned(),
-            ).await.expect("Migration up in creating Users went wrong");
+            )
+            .await
+            .expect("Migration up in creating Users went wrong");
 
         manager
             .create_table(
                 Table::create()
                     .table(Rooms::Table)
                     .if_not_exists()
-                    .col(
-                        ColumnDef::new(Rooms::Id)
-                            .not_null()
-                            .uuid()
-                            .primary_key(),
-                    )
+                    .col(ColumnDef::new(Rooms::Id).not_null().uuid().primary_key())
                     .col(ColumnDef::new(Rooms::Name).string().not_null())
                     .col(ColumnDef::new(Rooms::CreatedAt).date_time().not_null())
-                    .to_owned()
-        ).await
+                    .to_owned(),
+            )
+            .await
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
             .drop_table(Table::drop().table(Users::Table).to_owned())
-            .await.expect("Could not remove Users table");
+            .await
+            .expect("Could not remove Users table");
 
         manager
             .drop_table(Table::drop().table(Rooms::Table).to_owned())
@@ -59,7 +53,7 @@ pub enum Users {
 }
 
 #[derive(DeriveIden)]
-enum Rooms {
+pub enum Rooms {
     Table,
     Id,
     Name,

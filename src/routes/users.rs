@@ -3,9 +3,11 @@ use actix_web::{web, HttpResponse, Responder};
 use chrono::Utc;
 use entity::users::Entity as UserLoader;
 use entity::users::{self, Model};
+use entity::{rooms, rooms_users};
 use sea_orm::ActiveValue::Set;
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, EntityTrait, IntoActiveValue, JsonValue, QueryFilter,
+    QuerySelect, RelationTrait,
 };
 use serde::Deserialize;
 use serde_json::json;
@@ -52,9 +54,19 @@ pub async fn get_or_create_user(
 ) -> impl Responder {
     let db_connection = &app_state.database_connection;
 
-    let exisiting_user: Option<JsonValue> = UserLoader::find()
-        // @todo should we lower this whole string
+    // @todo How do we handle joins that result in no results? do we filter later or not
+    // with this todo we also need to check why tauri is failing
+    let exisiting_user: Option<(JsonValue, std::option::Option<JsonValue>)> = UserLoader::find()
         .filter(users::Column::Name.eq(request_data.name.to_owned()))
+        .join(
+            sea_orm::JoinType::LeftJoin,
+            users::Relation::RoomsUsers.def(),
+        )
+        .join(
+            sea_orm::JoinType::LeftJoin,
+            rooms_users::Relation::Rooms.def(),
+        )
+        .select_also(rooms::Entity)
         .into_json()
         .one(db_connection)
         .await

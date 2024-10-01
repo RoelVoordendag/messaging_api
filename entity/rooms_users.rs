@@ -3,18 +3,24 @@
 use sea_orm::entity::prelude::*;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
-#[sea_orm(table_name = "messages")]
+#[sea_orm(table_name = "rooms_users")]
 pub struct Model {
-    #[sea_orm(primary_key, auto_increment = false)]
-    pub id: Uuid,
-    #[sea_orm(column_type = "Text")]
-    pub body: String,
-    pub date_time: DateTime,
+    #[sea_orm(primary_key)]
+    pub id: i32,
     pub user_id: Uuid,
+    pub room_id: Uuid,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
+    #[sea_orm(
+        belongs_to = "super::rooms::Entity",
+        from = "Column::RoomId",
+        to = "super::rooms::Column::Id",
+        on_update = "NoAction",
+        on_delete = "NoAction"
+    )]
+    Rooms,
     #[sea_orm(
         belongs_to = "super::users::Entity",
         from = "Column::UserId",
@@ -23,6 +29,12 @@ pub enum Relation {
         on_delete = "NoAction"
     )]
     Users,
+}
+
+impl Related<super::rooms::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Rooms.def()
+    }
 }
 
 impl Related<super::users::Entity> for Entity {

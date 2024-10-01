@@ -7,7 +7,7 @@
 - [X] Do initial bootstrap for connection with DB.
 - [ ] Setup socket connections
 - [ ] During socket connection save messages
-  - [ ] Users we need to save usernames
+  - [X] Users we need to save usernames
     - [ ] Combine usernames to messages
 - [ ] Need to better routing inside actix web
   - [X] Pass db connection to endpoints, so we do not have to initialize it everytime
@@ -27,6 +27,12 @@ Migrator::up(&connection, None).await?;
 The idea of how we will save stuff is that there is a room where we connect
 the people in it. This means that 2 users in a means it is a personal chat and multiple people.
 Inside the message we save to which room id it is stored. (this might change over time)
+
+User is connected to messages
+Messages is connected to a user
+
+User is bound to rooms
+Rooms are bound to a message
 
 A message is many to one to a user
 A message is a many to many with a room
