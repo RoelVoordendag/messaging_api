@@ -13,15 +13,14 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(RoomsUsers::Table)
                     .if_not_exists()
-                    .col(
-                        ColumnDef::new(RoomsUsers::Id)
-                            .integer()
-                            .not_null()
-                            .primary_key()
-                            .auto_increment(),
-                    )
                     .col(ColumnDef::new(RoomsUsers::UserId).uuid().not_null())
                     .col(ColumnDef::new(RoomsUsers::RoomId).uuid().not_null())
+                    .primary_key(
+                        Index::create()
+                            .table(RoomsUsers::Table)
+                            .col(RoomsUsers::UserId)
+                            .col(RoomsUsers::RoomId),
+                    )
                     .to_owned(),
             )
             .await
@@ -51,12 +50,22 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_foreign_key(ForeignKey::drop().name("fk-rooms-users-users").to_owned())
+            .drop_foreign_key(
+                ForeignKey::drop()
+                    .name("fk-rooms-users-users")
+                    .table(RoomsUsers::Table)
+                    .to_owned(),
+            )
             .await
             .expect("Could not remove constaint fk-rooms-users-users");
 
         manager
-            .drop_foreign_key(ForeignKey::drop().name("fk-rooms-users-rooms").to_owned())
+            .drop_foreign_key(
+                ForeignKey::drop()
+                    .name("fk-rooms-users-rooms")
+                    .table(RoomsUsers::Table)
+                    .to_owned(),
+            )
             .await
             .expect("Could not remove contraint fk-rooms-users-rooms");
 
@@ -69,7 +78,6 @@ impl MigrationTrait for Migration {
 #[derive(DeriveIden)]
 enum RoomsUsers {
     Table,
-    Id,
     UserId,
     RoomId,
 }

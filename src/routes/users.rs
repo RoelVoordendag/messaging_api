@@ -1,26 +1,29 @@
 use crate::AppState;
 use actix_web::{web, HttpResponse, Responder};
 use chrono::Utc;
+use entity::rooms;
 use entity::users::Entity as UserLoader;
 use entity::users::{self, Model};
-use entity::{rooms, rooms_users};
 use sea_orm::ActiveValue::Set;
-use sea_orm::{
-    ActiveModelTrait, ColumnTrait, EntityTrait, IntoActiveValue, JsonValue, QueryFilter,
-    QuerySelect, RelationTrait,
-};
-use serde::Deserialize;
+use sea_orm::{ActiveModelTrait, ColumnTrait, EntityTrait, IntoActiveValue, QueryFilter};
+use serde::{Deserialize, Serialize};
 use serde_json::json;
 use uuid::Uuid;
 
 #[derive(Deserialize)]
-pub struct User {
+pub struct UserRequest {
     name: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct UserRoomsResponse {
+    user: users::Model,
+    rooms: Vec<rooms::Model>,
 }
 
 pub async fn create_user(
     app_state: web::Data<AppState>,
-    request_data: web::Json<User>,
+    request_data: web::Json<UserRequest>,
 ) -> impl Responder {
     let database_connection = &app_state.database_connection;
 
@@ -50,32 +53,22 @@ pub async fn create_user(
 
 pub async fn get_or_create_user(
     app_state: web::Data<AppState>,
-    request_data: web::Json<User>,
+    request_data: web::Json<UserRequest>,
 ) -> impl Responder {
     let db_connection = &app_state.database_connection;
 
-    // @todo How do we handle joins that result in no results? do we filter later or not
-    // with this
-    // We need to add a todo a rooms object to make filtering for the FE easier
-    let exisiting_user: Option<(JsonValue, std::option::Option<JsonValue>)> = UserLoader::find()
+    let test_user: Vec<UserRoomsResponse> = users::Entity::find()
         .filter(users::Column::Name.eq(request_data.name.to_owned()))
-        .join(
-            sea_orm::JoinType::LeftJoin,
-            users::Relation::RoomsUsers.def(),
-        )
-        .join(
-            sea_orm::JoinType::LeftJoin,
-            rooms_users::Relation::Rooms.def(),
-        )
-        .select_also(rooms::Entity)
-        .into_json()
-        .one(db_connection)
+        .find_with_related(rooms::Entity)
+        .all(db_connection)
         .await
-        .expect("Something went wrong querying the database.");
+        .expect("Something went wrong querying the database.")
+        .into_iter()
+        .map(|(users, rooms)| UserRoomsResponse { user: users, rooms })
+        .collect();
 
-    if exisiting_user != None {
-        // @todo we need to add rooms if users has them
-        return HttpResponse::Ok().json(exisiting_user);
+    if !test_user.is_empty() {
+        return HttpResponse::Ok().json(test_user);
     }
 
     let user = users::ActiveModel {

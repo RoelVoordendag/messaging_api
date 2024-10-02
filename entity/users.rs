@@ -33,4 +33,13 @@ impl Related<super::rooms_users::Entity> for Entity {
     }
 }
 
+impl Related<super::rooms::Entity> for Entity {
+    fn to() -> RelationDef {
+        super::rooms_users::Relation::Rooms.def()
+    }
+    fn via() -> Option<RelationDef> {
+        Some(super::rooms_users::Relation::Users.def().rev())
+    }
+}
+
 impl ActiveModelBehavior for ActiveModel {}
