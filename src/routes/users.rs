@@ -55,7 +55,8 @@ pub async fn get_or_create_user(
     let db_connection = &app_state.database_connection;
 
     // @todo How do we handle joins that result in no results? do we filter later or not
-    // with this todo we also need to check why tauri is failing
+    // with this
+    // We need to add a todo a rooms object to make filtering for the FE easier
     let exisiting_user: Option<(JsonValue, std::option::Option<JsonValue>)> = UserLoader::find()
         .filter(users::Column::Name.eq(request_data.name.to_owned()))
         .join(
