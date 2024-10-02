@@ -7,7 +7,6 @@ use entity::users::{self, Model};
 use sea_orm::ActiveValue::Set;
 use sea_orm::{ActiveModelTrait, ColumnTrait, EntityTrait, IntoActiveValue, QueryFilter};
 use serde::{Deserialize, Serialize};
-use serde_json::json;
 use uuid::Uuid;
 
 #[derive(Deserialize)]
@@ -83,5 +82,8 @@ pub async fn get_or_create_user(
         .await
         .expect("Something went wrong with creation user");
 
-    return HttpResponse::Ok().json(json!(inserted_user));
+    return HttpResponse::Ok().json(UserRoomsResponse {
+        user: inserted_user,
+        rooms: vec![],
+    });
 }
