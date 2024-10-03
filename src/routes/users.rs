@@ -56,7 +56,7 @@ pub async fn get_or_create_user(
 ) -> impl Responder {
     let db_connection = &app_state.database_connection;
 
-    let test_user: Vec<UserRoomsResponse> = users::Entity::find()
+    let existing_user: Vec<UserRoomsResponse> = users::Entity::find()
         .filter(users::Column::Name.eq(request_data.name.to_owned()))
         .find_with_related(rooms::Entity)
         .all(db_connection)
@@ -66,8 +66,8 @@ pub async fn get_or_create_user(
         .map(|(users, rooms)| UserRoomsResponse { user: users, rooms })
         .collect();
 
-    if !test_user.is_empty() {
-        return HttpResponse::Ok().json(test_user);
+    if !existing_user.is_empty() {
+        return HttpResponse::Ok().json(existing_user);
     }
 
     let user = users::ActiveModel {
