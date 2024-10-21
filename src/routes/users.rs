@@ -67,7 +67,7 @@ pub async fn get_or_create_user(
         .collect();
 
     if !existing_user.is_empty() {
-        return HttpResponse::Ok().json(existing_user);
+        return HttpResponse::Ok().json(&existing_user.first());
     }
 
     let user = users::ActiveModel {
