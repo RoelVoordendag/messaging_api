@@ -20,6 +20,11 @@ struct UserRoomsResponse {
     rooms: Vec<rooms::Model>,
 }
 
+#[derive(Debug, Deserialize)]
+pub struct UserSearch {
+    username: Option<String>,
+}
+
 pub async fn create_user(
     app_state: web::Data<AppState>,
     request_data: web::Json<UserRequest>,
@@ -86,4 +91,16 @@ pub async fn get_or_create_user(
         user: inserted_user,
         rooms: vec![],
     });
+}
+
+pub async fn search_user(
+    app_state: web::Data<AppState>,
+    req: web::Query<UserSearch>,
+) -> impl Responder {
+    // @todo: In this case we add the search param to the query
+    if req.username.is_some() {
+        println!("{:?}", req.username);
+    }
+
+    return HttpResponse::Ok();
 }

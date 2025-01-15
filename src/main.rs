@@ -32,6 +32,7 @@ async fn main() -> std::io::Result<()> {
                         web::post().to(routes::messages::create_message),
                     )
                     .route("/users", web::post().to(routes::users::create_user))
+                    .route("/users", web::get().to(routes::users::search_user))
                     .route(
                         "/users/create",
                         web::post().to(routes::users::get_or_create_user),

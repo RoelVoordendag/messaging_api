@@ -18,6 +18,17 @@ pub async fn create_room(
 ) -> impl Responder {
     let database_connection = &app_state.database_connection;
 
+    // /**
+
+    //     We need to recieve the current user and the one they are trying to connect with
+    //     So
+    //     created_by: user_id
+    //     name: "De coole kamer"
+    //     users: [
+    //         { usersId }
+    //     ]
+    // */
+    //
     let room = rooms::ActiveModel {
         name: Set(request_data.name.to_owned()),
         created_at: Set(Utc::now().naive_utc()),
