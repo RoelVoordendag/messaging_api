@@ -5,7 +5,9 @@ use entity::rooms;
 use entity::users::Entity as UserLoader;
 use entity::users::{self, Model};
 use sea_orm::ActiveValue::Set;
-use sea_orm::{ActiveModelTrait, ColumnTrait, EntityTrait, IntoActiveValue, QueryFilter};
+use sea_orm::{
+    ActiveModelTrait, ColumnTrait, EntityTrait, IntoActiveValue, QueryFilter, QueryOrder,
+};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -95,12 +97,21 @@ pub async fn get_or_create_user(
 
 pub async fn search_user(
     app_state: web::Data<AppState>,
-    req: web::Query<UserSearch>,
+    request: web::Query<UserSearch>,
 ) -> impl Responder {
-    // @todo: In this case we add the search param to the query
-    if req.username.is_some() {
-        println!("{:?}", req.username);
+    let db_connection = &app_state.database_connection;
+
+    let mut users_query = users::Entity::find();
+
+    if let Some(username) = &request.username {
+        users_query = users_query.filter(users::Column::Name.contains(username.to_owned()));
     }
 
-    return HttpResponse::Ok();
+    let users = users_query
+        .order_by_asc(users::Column::CreatedAt)
+        .all(db_connection)
+        .await
+        .expect("Something went wrong with collecting the users");
+
+    return HttpResponse::Ok().json(users);
 }
