@@ -7,6 +7,7 @@ use entity::users::{self, Model};
 use sea_orm::ActiveValue::Set;
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, EntityTrait, IntoActiveValue, QueryFilter, QueryOrder,
+    QuerySelect,
 };
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -108,6 +109,7 @@ pub async fn search_user(
     }
 
     let users = users_query
+        .limit(5)
         .order_by_asc(users::Column::CreatedAt)
         .all(db_connection)
         .await
