@@ -1,34 +1,38 @@
+use crate::services::user_service::UserService;
 use crate::AppState;
 use actix_web::{web, HttpResponse, Responder};
 use chrono::Utc;
-use entity::rooms;
+use entity::{rooms, users};
 use sea_orm::ActiveValue::Set;
 use sea_orm::{ActiveModelTrait, IntoActiveValue};
 use serde::Deserialize;
 use uuid::Uuid;
 
 #[derive(Deserialize)]
-pub struct RoomRequest {
+pub struct CreateRoomRequest {
     name: String,
+    user_id: String,
+    chat_user_id: String,
 }
 
 pub async fn create_room(
     app_state: web::Data<AppState>,
-    request_data: web::Json<RoomRequest>,
+    request_data: web::Json<CreateRoomRequest>,
 ) -> impl Responder {
     let database_connection = &app_state.database_connection;
 
-    // /**
+    let user_service = UserService {
+        database_connection: app_state.database_connection.to_owned(),
+    };
 
-    //     We need to recieve the current user and the one they are trying to connect with
-    //     So
-    //     created_by: user_id
-    //     name: "De coole kamer"
-    //     users: [
-    //         { usersId }
-    //     ]
-    // */
-    //
+    let test = user_service.user_exist(request_data.user_id.to_owned());
+
+    // if !user_service.user_exist(request_data.user_id.to_owned())
+    // || !user_service.user_exist(request_data.current_user_id.to_owned())
+    // {
+    // return HttpResponse::NotAcceptable().body("Users do not exist");
+    // }
+
     let room = rooms::ActiveModel {
         name: Set(request_data.name.to_owned()),
         created_at: Set(Utc::now().naive_utc()),

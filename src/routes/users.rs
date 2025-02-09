@@ -24,7 +24,7 @@ struct UserRoomsResponse {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct UserSearch {
+pub struct UserSearchRequest {
     username: Option<String>,
 }
 
@@ -98,7 +98,7 @@ pub async fn get_or_create_user(
 
 pub async fn search_user(
     app_state: web::Data<AppState>,
-    request: web::Query<UserSearch>,
+    request: web::Query<UserSearchRequest>,
 ) -> impl Responder {
     let db_connection = &app_state.database_connection;
 

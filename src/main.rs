@@ -1,4 +1,5 @@
 mod routes;
+mod services;
 
 use actix_web::{web, App, HttpServer};
 use dotenv::dotenv;
@@ -37,7 +38,7 @@ async fn main() -> std::io::Result<()> {
                         "/users/create",
                         web::post().to(routes::users::get_or_create_user),
                     )
-                    .route("/room", web::post().to(routes::rooms::create_room)),
+                    .route("/rooms", web::post().to(routes::rooms::create_room)),
             )
     })
     .bind(("127.0.0.1", 4040))?
