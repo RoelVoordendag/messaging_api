@@ -25,13 +25,20 @@ pub async fn create_room(
         database_connection: app_state.database_connection.to_owned(),
     };
 
-    let test = user_service.user_exist(request_data.user_id.to_owned());
+    if user_service
+        .user_exist(request_data.user_id.to_owned())
+        .await
+        == false
+        || user_service
+            .user_exist(request_data.chat_user_id.to_owned())
+            .await
+            == false
+    {
+        return HttpResponse::NotAcceptable().body("Users do not exist");
+    }
 
-    // if !user_service.user_exist(request_data.user_id.to_owned())
-    // || !user_service.user_exist(request_data.current_user_id.to_owned())
-    // {
-    // return HttpResponse::NotAcceptable().body("Users do not exist");
-    // }
+    // @todo handle the creation correctly
+    //  Need to fill the connection table
 
     let room = rooms::ActiveModel {
         name: Set(request_data.name.to_owned()),

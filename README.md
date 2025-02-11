@@ -1,3 +1,7 @@
+## Introduction
+
+Small api for messaging_app to create a messaging app with a rust combined with a tauri FE.
+
 ## Todo:
 - [X] Create routes for sending messages
     - [X] Handling the saving of the new items inside it
@@ -7,8 +11,8 @@
 - [X] Do initial bootstrap for connection with DB.
 - [ ] Setup socket connections
 - [ ] During socket connection save messages
-  - [X] Users we need to save usernames
-    - [ ] Combine usernames to messages
+- [X] Users we need to save usernames
+  - [ ] Combine usernames to messages
 - [ ] Need to better routing inside actix web
   - [X] Pass db connection to endpoints, so we do not have to initialize it everytime
   - [ ] We need to check what the proper way is of handling multiple routes because currently I do not have the feeling this is correct
@@ -16,30 +20,12 @@
   - [X] Learn on how to handle errors from find queries
   - [X] How do I return a error from the API when something is not correct
   - [ ] How do we catch errors when unwrapping uuid parses
-- Look into https://www.sea-ql.org/SeaORM/docs/next/basic-crud/insert/#set-activemodel-from-json-value to make life easier with user input
-
-use migration::{Migrator, MigratorTrait};
-
-let connection = sea_orm::Database::connect(&database_url).await?;
-Migrator::up(&connection, None).await?;
-
+- [ ] Update mermaid chart
 
 The idea of how we will save stuff is that there is a room where we connect
 the people in it. This means that 2 users in a means it is a personal chat and multiple people.
 Inside the message we save to which room id it is stored. (this might change over time)
 
-User is connected to messages
-Messages is connected to a user
-
-User is bound to rooms
-Rooms are bound to a message
-
-A message is many to one to a user
-A message is a many to many with a room
-
-User to Rooms can many to many
-
-#todo update this diagram
 ```mermaid
 ---
 Title: Flow of saving of messages
